@@ -26,7 +26,7 @@ function Login() {
 
 
     setMessage(["info", "Logging In..."]);
-    const { user, session, error } = await supabase.auth.signIn({
+    const { user, error } = await supabase.auth.signIn({
       email: mail,
       password: password
     });
@@ -45,7 +45,7 @@ function Login() {
     const password = passwordRef.current.value;
 
     setMessage(["info", "Registering..."]);
-    const { user, session, error } = await supabase.auth.signUp({
+    const { user, error } = await supabase.auth.signUp({
       email: mail,
       password: password
     });

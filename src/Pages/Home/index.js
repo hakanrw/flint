@@ -1,5 +1,4 @@
 import { styled } from '@mui/material/styles';
-import { useNavigate } from "react-router-dom";
 
 import { Avatar, Button, CardActions, Card, CardContent, CardHeader, CardMedia, Container, Grid, IconButton, Paper, Typography } from "@mui/material";
 
@@ -29,7 +28,6 @@ const ExpandMore = styled((props) => {
 }));
 
 function Home() {
-  const navigate = useNavigate();
   const appContext = useContext(AppContext);
 
   if (!appContext.session) return (
