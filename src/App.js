@@ -1,23 +1,39 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
+import {
+  Routes,
+  Route,
+} from "react-router-dom";
+
+import { supabase } from "./supabaseClient";
+import Login from "./Pages/Login";
+
+import Typography from '@mui/material/Typography';
+import Navbar from "./Components/Navbar";
 import './App.css';
+import { AppProvider } from './appContext';
+import Home from './Pages/Home';
 
 function App() {
+  const [session, setSession] = useState(null);
+  
+  useEffect(() => {
+    setSession(supabase.auth.session());
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    })
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AppProvider value={{session}}>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/news" element={<Typography align="center" variant="h4" sx={{my: 5}}>WIP</Typography>} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+      </AppProvider>
     </div>
   );
 }
