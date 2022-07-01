@@ -6,10 +6,18 @@ import Home from '.';
 import { AppProvider } from '../../appContext';
 
 const mockedUsedNavigate = jest.fn();
+const mockedUsedLocation = jest.fn();
+const mockedUsedRoutes = jest.fn();
 
 jest.mock('react-router-dom', () => ({
    ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedUsedNavigate,
+  useLocation: () => mockedUsedLocation,
+}));
+
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  Routes: () => <div />
 }));
 
 test("Welcome page is shown when not logged in", () => {

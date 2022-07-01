@@ -14,14 +14,12 @@ import { AppProvider } from './appContext';
 import Home from './Pages/Home';
 
 function App() {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState(supabase.auth.session());
   
   useEffect(() => {
-    setSession(supabase.auth.session());
-
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-    })
+    });
   }, []);
 
   return (
@@ -29,9 +27,9 @@ function App() {
       <AppProvider value={{session}}>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
         <Route path="/news" element={<Typography align="center" variant="h4" sx={{my: 5}}>WIP</Typography>} />
         <Route path="/login" element={<Login />} />
+        <Route path="*" element={<Home />} />
       </Routes>
       </AppProvider>
     </div>

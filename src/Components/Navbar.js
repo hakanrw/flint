@@ -6,7 +6,8 @@ import Typography from '@mui/material/Typography';
 
 import BookIcon from '@mui/icons-material/Book';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import { IconButton } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import { alpha, IconButton, InputBase, styled } from '@mui/material';
 
 import Tooltip from '@mui/material/Tooltip';
 import Container from '@mui/material/Container';
@@ -14,20 +15,83 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
-import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import AppContext from '../appContext';
 import { supabase } from '../supabaseClient';
 
-let pages = [["News", "/news"], ["Blog", "/blog"], ["Contact", "/contact"]];
+
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: '100%',
+  maxWidth: "350px",
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(3),
+    width: 'auto',
+  },
+  [theme.breakpoints.only('xs')]: {
+    marginLeft: "auto",
+    marginRight: "auto"
+  }
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%'
+  },
+  width: '100%'
+  
+}));
+
+function SearchUtility() {
+  const navigate = useNavigate();
+
+  const searchFunction = useCallback(event => {
+    if (event.key === "Enter") navigate("/people?q=" + encodeURIComponent(event.target.value));
+  }, [navigate]);
+
+  return (
+    <Search> 
+      <SearchIconWrapper>
+        <SearchIcon />
+      </SearchIconWrapper>
+      <StyledInputBase
+        placeholder="Search for people"
+        inputProps={{ 'aria-label': 'search' }}
+        onKeyUp={searchFunction}
+      />
+    </Search>
+  );
+}
 
 function Navbar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const appContext = useContext(AppContext);
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
-  let settings = [
+  const settings = [
     ["Settings",() => console.log("i called")],
     ["Profile", ],
     ["Log Out", () => supabase.auth.signOut()],
@@ -58,16 +122,7 @@ function Navbar() {
             </Typography>
           </Box>
           <Box sx={{ flexGrow: 1 }}>
-            {
-              pages.map(page => 
-                <Button
-                  key={page[1]}
-                  sx={{ my: 2, color: 'white' }}
-                  onClick={() => navigate(page[1])}>
-                  {page[0]}
-                </Button>
-              )
-            }
+            { appContext.session && <SearchUtility /> }
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
