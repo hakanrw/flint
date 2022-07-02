@@ -14,6 +14,7 @@ function Login() {
 
   const mailRef = useRef(null);
   const passwordRef = useRef(null);
+  const rePasswordRef = useRef(null);
 
   const [message, setMessage] = useState(null);
   const [isRegister, setIsRegister] = useState(false);
@@ -43,6 +44,12 @@ function Login() {
   const register = useCallback(async () => {
     const mail = mailRef.current.value;
     const password = passwordRef.current.value;
+    const rePassword = rePasswordRef.current.value;
+
+    if (password !== rePassword) {
+      setMessage(["error", "Passwords do not match."]);
+      return;
+    }
 
     setMessage(["info", "Registering..."]);
     const { user, error } = await supabase.auth.signUp({
@@ -58,16 +65,23 @@ function Login() {
     }
   }, []);
 
+  const handleEnter = useCallback(event => {
+    if (event.key === "Enter") {
+      if (isRegister) register();
+      else logIn();
+    }
+  }, [register, logIn, isRegister]);
+
   const isError = Boolean(message && message[0] === "error");
   
   return (
     <Container maxWidth="sm" sx={{py: 4}}>
       <Paper sx={{p: 4, textAlign:"center", fontWeight: 600}}> 
         <Typography color="primary" variant="h3">Log In</Typography>
-        <TextField error={isError} {...style} fullWidth variant="outlined" label="E-mail" inputRef={mailRef} />
+        <TextField error={isError} {...style} fullWidth variant="outlined" label="E-mail" inputRef={mailRef} onKeyUp={handleEnter} />
         { /* <TextField fullWidth variant="outlined" label="E-mail" /> */ }
-        <TextField error={isError} {...style} fullWidth variant="outlined" label="Password" type="password" inputRef={passwordRef} />
-        { isRegister && <TextField error={isError} {...style} fullWidth variant="outlined" label="Password Check" type="password" /> }
+        <TextField error={isError} {...style} fullWidth variant="outlined" label="Password" type="password" inputRef={passwordRef} onKeyUp={handleEnter} />
+        { isRegister && <TextField error={isError} {...style} fullWidth variant="outlined" label="Password Check" type="password" inputRef={rePasswordRef} onKeyUp={handleEnter} /> }
         <Link {...style} display="block" onClick={() => {setIsRegister(!isRegister)}} href="#" underline="hover">
           { isRegister ? "Already registered? Sign In." : "No account? Register."}
         </Link>

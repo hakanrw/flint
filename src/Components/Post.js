@@ -38,7 +38,7 @@ function Post() {
             <MoreVertIcon />
           </IconButton>
         }
-        title="Hakan"
+        title="The X"
         subheader="June 28, 2022"
       />
         <CardMedia

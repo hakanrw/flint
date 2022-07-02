@@ -10,7 +10,7 @@ function Welcome() {
       <Paper sx={{p: 4, textAlign:"center", fontWeight: 600}} >
       <Typography color="primary" variant="h3">Flint</Typography>
       <Typography sx={{my: 2}} color="primary" variant="h5">
-        Explore the world of modern social platforming.
+        This is Flint.<br />Explore the world and the people within.
       </Typography>
       <Button sx={{mt: 15, width: {md: .4},  py: 1}} variant="contained" onClick={() => navigate("/login")}>Sign In Now</Button>
       </Paper>
