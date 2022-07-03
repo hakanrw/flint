@@ -4,15 +4,16 @@ import { Button, Container, Grid, Paper, Typography } from "@mui/material";
 import { useContext } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AppContext from "../../appContext";
-import Post from "../../Components/Post";
 import WIP from "../../Components/WIP";
+import Feed from "../Feed";
+import Profile from "../Profile";
 import Welcome from "../Welcome";
 
 const routes = [
-  ["/", "Feed", <Post />],
+  ["/", "Feed", <Feed />],
   ["/people", "People", <WIP />],
   ["/messages", "Messages", <WIP />],
-  ["/profile", "My Profile", <WIP />],
+  ["/profile", "My Profile", <Profile />],
 
 ];
 function Home() {

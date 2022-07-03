@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Typography } from "@mui/material";
+import { Avatar, Card, CardActions, CardContent, CardHeader, IconButton, Skeleton, Typography } from "@mui/material";
 
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -7,8 +7,8 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import PaellaImage from './paella.jpg';
-import { useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
+import moment from 'moment';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -21,40 +21,63 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-function Post() {
+function Post(props) {
+  const { loading = false, author, content, created_at, username } = props;
+
+  const screenName = username || author || "unbeknownst";
+
   useEffect(() => {
     console.log("post instaled")
-  }, [])
+  }, []);
+
   return (
     <Card sx={{ marginLeft: "auto", marginRight: "auto", my: 2 }}>
       <CardHeader
         avatar={
+          loading ?
+          <Skeleton variant="circular" width={40} height={40} /> :
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            X
+            {screenName[0]}
           </Avatar>
         }
         action={
+          loading ?
+          null :
           <IconButton aria-label="settings">
             <MoreVertIcon />
           </IconButton>
         }
-        title="The X"
-        subheader="June 28, 2022"
+        title={
+          loading ? 
+          <Skeleton height={10} width="80%" style={{ marginBottom: 6 }} /> :
+          screenName 
+        }
+        subheader={
+          loading ?
+          <Skeleton height={10} width="40%" /> :
+          moment(created_at).format('MMMM Do YYYY, h:mm a') 
+        }
       />
-        <CardMedia
-          component="img"
-          height="194"
-          image={PaellaImage}
-          alt="Paella dish"
-        />
+        {
+          loading && <Skeleton sx={{ height: 190 }} variant="rectangular" />
+        }
         <CardContent>
-          <Typography variant="body2" color="text.secondary">
-            This impressive paella is a perfect party dish and a fun meal to cook
-            together with your guests. Add 1 cup of frozen peas along with the mussels,
-            if you like.
-          </Typography>
+          {
+            loading ? 
+            <Fragment> 
+              <Skeleton height={10} style={{ marginBottom: 6 }} />
+              <Skeleton height={10} style={{ marginBottom: 6 }} />
+              <Skeleton height={10} width="80%" />
+            </Fragment>
+            : 
+            <Typography variant="body2" color="text.secondary">
+              {content}
+            </Typography>
+          }
         </CardContent>
-        <CardActions disableSpacing>
+        {
+          !loading && 
+          <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
             <FavoriteIcon />
           </IconButton>
@@ -69,6 +92,8 @@ function Post() {
             <ExpandMoreIcon />
           </ExpandMore>
         </CardActions>
+        }
+        
     </Card>
   );
 }

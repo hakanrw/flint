@@ -1,12 +1,8 @@
-import { Paper, Typography } from "@mui/material";
+import Announcement from "./Announcement";
 
 function WIP() {
   return (
-    <Paper sx={{my: 2, p: 4, textAlign: "center"}}>
-      <Typography variant="h5" color="primary">
-        We are working on this page
-      </Typography>
-    </Paper>
+    <Announcement message="We are working on this page." />
   );
 }
 

@@ -11,7 +11,8 @@ import { useNavigate } from 'react-router-dom';
 
 function Login() {
   let style = {sx: {mt: 2}};
-
+  
+  const usernameRef = useRef(null);
   const mailRef = useRef(null);
   const passwordRef = useRef(null);
   const rePasswordRef = useRef(null);
@@ -79,7 +80,7 @@ function Login() {
       <Paper sx={{p: 4, textAlign:"center", fontWeight: 600}}> 
         <Typography color="primary" variant="h3">Log In</Typography>
         <TextField error={isError} {...style} fullWidth variant="outlined" label="E-mail" inputRef={mailRef} onKeyUp={handleEnter} />
-        { /* <TextField fullWidth variant="outlined" label="E-mail" /> */ }
+        { isRegister && <TextField error={isError} {...style} fullWidth variant="outlined" label="Username" inputRef={usernameRef} onKeyUp={handleEnter} /> }
         <TextField error={isError} {...style} fullWidth variant="outlined" label="Password" type="password" inputRef={passwordRef} onKeyUp={handleEnter} />
         { isRegister && <TextField error={isError} {...style} fullWidth variant="outlined" label="Password Check" type="password" inputRef={rePasswordRef} onKeyUp={handleEnter} /> }
         <Link {...style} display="block" onClick={() => {setIsRegister(!isRegister)}} href="#" underline="hover">
