@@ -31,7 +31,7 @@ function Feed() {
   return (
     <div>
       <Write onPost={onWritePost} />
-      { posts.length === 0 && <Announcement message="Your feed is empty :(" /> }
+      { !load && posts.length === 0 && <Announcement message="Your feed is empty :(" /> }
       { load && <Post loading noImage /> }
       {
         posts.map(post => 
