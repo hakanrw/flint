@@ -22,7 +22,7 @@ const ExpandMore = styled((props) => {
 }));
 
 function Post(props) {
-  const { loading = false, author, content, created_at, username } = props;
+  const { loading = false, noImage = false, author, content, created_at, username } = props;
 
   const screenName = username || author || "unbeknownst";
 
@@ -59,7 +59,7 @@ function Post(props) {
         }
       />
         {
-          loading && <Skeleton sx={{ height: 190 }} variant="rectangular" />
+          loading && !noImage && <Skeleton sx={{ height: 190 }} variant="rectangular" />
         }
         <CardContent>
           {

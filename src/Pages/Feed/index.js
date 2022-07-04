@@ -6,10 +6,17 @@ import { supabase } from "../../supabaseClient";
 
 function Feed() {
   const [posts, setPosts] = useState(null);
+  const [load, setLoad] = useState(false);
 
-  // fetch posts
+  const fetchPosts = () => supabase.rpc("get_posts_v2").then(data => {setPosts(data.data); setLoad(false)});
+  
+  const onWritePost = (finished = false) => {
+    setLoad(true);
+    if (finished) fetchPosts();
+  }
+  // fetch posts on initialize
   useEffect(() => {
-    supabase.rpc("get_posts_v2").then(data => setPosts(data.data));
+    fetchPosts();
   }, []);
 
   if (posts === null) {
@@ -21,15 +28,11 @@ function Feed() {
     );
   }
 
-  if (posts.length === 0) {
-    return (
-      <Announcement message="Your feed is empty :(" />
-    );
-  }
-
   return (
     <div>
-      <Write />
+      <Write onPost={onWritePost} />
+      { posts.length === 0 && <Announcement message="Your feed is empty :(" /> }
+      { load && <Post loading noImage /> }
       {
         posts.map(post => 
           <Post key={post.id} author={post.author} content={post.content} created_at={post.created_at} username={post.username} />

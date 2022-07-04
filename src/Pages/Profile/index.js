@@ -8,6 +8,7 @@ import { supabase } from "../../supabaseClient";
 function Profile() {
   const [profile, setProfile] = useState(null);
   const [updatedProfile, setUpdatedProfile] = useState(null);
+  const [error, setError] = useState(null);
 
   const fetchProfile = () => supabase.rpc("get_current_profile").then(user => user.data[0])
     .then(data => setProfile({...data, email: supabase.auth.user().email})); 
@@ -25,7 +26,13 @@ function Profile() {
   const updateProfile = () => {
     if (updateProfile === null) return;
     setProfile(null);
-    supabase.rpc("update_profile", updatedProfile).then(console.log).then(() => fetchProfile())
+    setError(null);
+    supabase.rpc("update_profile", updatedProfile)
+      .then(res => {
+        console.log(res);
+        if (res.error) setError(res.error.details);
+      })
+      .then(() => fetchProfile())
   }
 
   if (profile === null) {
@@ -40,6 +47,7 @@ function Profile() {
       <Typography variant="h5" color="primary">Profile Settings</Typography>
       <TextField {...style} label="Username" variant="outlined" defaultValue={profile.username} onKeyUp={event => valueChange("username", event)} />
       <TextField {...style} label="E-mail" variant="outlined" value={profile.email} disabled />
+      { error && <Alert sx={{my: 2}} severity="error">{error}</Alert>}
       <Box sx={{maxWidth: "150px"}}>
         <Button fullWidth {...style} variant="outlined">My Profile</Button>
         <Button onClick={updateProfile} fullWidth {...style} variant="contained">Save Changes</Button>

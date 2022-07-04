@@ -46,6 +46,7 @@ function Login() {
     const mail = mailRef.current.value;
     const password = passwordRef.current.value;
     const rePassword = rePasswordRef.current.value;
+    const username = usernameRef.current.value;
 
     if (password !== rePassword) {
       setMessage(["error", "Passwords do not match."]);
@@ -55,7 +56,12 @@ function Login() {
     setMessage(["info", "Registering..."]);
     const { user, error } = await supabase.auth.signUp({
       email: mail,
-      password: password
+      password: password,
+    }, {
+      data: {
+        username: username,
+        avatar_url: "",
+      } 
     });
     setMessage(null);
     
