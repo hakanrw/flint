@@ -68,7 +68,7 @@ function SearchUtility() {
   const navigate = useNavigate();
 
   const searchFunction = useCallback(event => {
-    if (event.key === "Enter") navigate("/people?q=" + encodeURIComponent(event.target.value));
+    if (event.keyCode === 13) navigate("/people?q=" + encodeURIComponent(event.target.value));
   }, [navigate]);
 
   return (
@@ -79,7 +79,8 @@ function SearchUtility() {
       <StyledInputBase
         placeholder="Search for people"
         inputProps={{ 'aria-label': 'search' }}
-        onKeyUp={searchFunction}
+        onKeyDown={searchFunction}
+        type="search"
       />
     </Search>
   );
