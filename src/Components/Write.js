@@ -11,7 +11,6 @@ function Write({ onPost }) {
   const sendPost = useCallback(() => {
     onPost();
     const _postval = value;
-    console.log(value);
     setValue('');
     
     supabase.rpc("create_post", { content: _postval }).then(res => {
