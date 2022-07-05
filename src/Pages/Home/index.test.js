@@ -15,6 +15,18 @@ jest.mock('react-router-dom', () => ({
   useLocation: () => mockedUsedLocation,
 }));
 
+jest.mock('../../supabaseClient', () => ({
+  __esModule: true,
+  supabase: {
+    auth: {
+      //signIn: jest.fn(x => ( (x.username && x.password) ? {user: {mock: 1}, session: {mock: 1}, error: null} : {user: null, session: null, error: {message: "bad login"}})),
+      signIn: jest.fn(),
+      signUp: jest.fn(),
+    },
+    rpc: () => new Promise({error: null, data: [], body: []})
+  }
+}));
+
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   Routes: () => <div />

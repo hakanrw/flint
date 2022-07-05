@@ -14,8 +14,8 @@ const routes = [
   ["/people", "People", <WIP />],
   ["/messages", "Messages", <WIP />],
   ["/profile", "My Profile", <Profile />],
-
 ];
+
 function Home() {
   const appContext = useContext(AppContext);
   const location = useLocation();
@@ -25,6 +25,7 @@ function Home() {
   if (!appContext.session) return (
     <Welcome />
   );
+
   return (
     <Container data-testid="home-container" sx={{mt: 5}}>
       <Grid container spacing={2}>
