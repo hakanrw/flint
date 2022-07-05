@@ -2,9 +2,12 @@ import { Avatar, Button, Card, CardHeader, Skeleton } from "@mui/material";
 
 import { red } from '@mui/material/colors';
 import { Box } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 
-function Person({ username, id, avatar_url, loading = false }) {
+function Person({ username, id, avatar_url, loading = false, onPage = false }) {
   const screenName = username || id || "unbeknownst";
+
+  const navigate = useNavigate();
 
   return (
     <Card sx={{my: 2}}>
@@ -21,7 +24,7 @@ function Person({ username, id, avatar_url, loading = false }) {
           null :
           <Box>
             <Button>Follow</Button>
-            <Button>Profile</Button>
+            { !onPage && <Button onClick={() => navigate(username)}>Profile</Button> }
           </Box>
         }
         title={

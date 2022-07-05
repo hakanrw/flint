@@ -1,5 +1,5 @@
 import { Box, Button, Paper, TextField } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Person from "../../Components/Person";
 import { supabase } from "../../supabaseClient";
@@ -26,17 +26,26 @@ function PeopleSearch() {
       });
   }, [query]);
 
+  const onSearch = useCallback(() => {
+    navigate("?q=" + encodeURIComponent(searchRef.current.value));
+  }, [navigate]);
+
+  const onKeyPress = useCallback(event => {
+    if (event.keyCode===13) onSearch();
+  }, [onSearch]);
+
   return (
     <div>
       <Paper sx={{my: 2, p: 2}}>
         <Box sx={{display: "flex"}}>
-          <TextField size="small" label="Search for people" inputRef={searchRef}/>
-          <Button onClick={() => navigate("?q=" + encodeURIComponent(searchRef.current.value))} sx={{ml: 1}}>Search</Button>
+          <TextField size="small" label="Search for people" onKeyUp={onKeyPress} inputRef={searchRef} />
+          <Button onClick={onSearch} sx={{ml: 1}}>Search</Button>
         </Box>
       </Paper>
       {
         loading && 
         <React.Fragment>
+          <Person loading />
           <Person loading />
           <Person loading />
           <Person loading />

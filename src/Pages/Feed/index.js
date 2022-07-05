@@ -35,7 +35,7 @@ function Feed() {
       { load && <Post loading noImage /> }
       {
         posts.map(post => 
-          <Post key={post.id} author={post.author} content={post.content} created_at={post.created_at} username={post.username} />
+          <Post key={post.id} {...post} />
         )
       }
     </div>
