@@ -26,12 +26,12 @@ function Home() {
   if (!appContext.session) return (
     <Welcome />
   );
-
   return (
     <Container data-testid="home-container" sx={{mt: 5}}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={3} >
-          <Paper sx={{p: 2, '& button': {display: {xs: "inline", sm: "block"}, width: {sm: "100%"}, textAlign: "left"}}}>
+          <Paper sx={{p: 2, display: {xs: "flex", sm: "block", overflowX: "auto"},
+           '& button': {display: {xs: "inline", sm: "block"}, width: {sm: "100%"}, textAlign: "left", flexShrink: 0}}}>
             {
               routes.map(route => <Button key={route[0]} onClick={() => navigate(route[0])}>{route[1]}</Button> )
             }

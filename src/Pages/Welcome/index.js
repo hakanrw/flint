@@ -15,7 +15,7 @@ function Welcome() {
       <Button sx={{mt: 15, width: {md: .4},  py: 1}} variant="contained" onClick={() => navigate("/login")}>Sign In Now</Button>
       </Paper>
     </Container>
-    <BookIcon color="primary" sx={{position: "absolute", width: "20em", height: "20em", zIndex: -1, mt: "120px", left: "5%", display: {sm: "none", lg: "block"}}}></BookIcon>
+    <BookIcon color="primary" sx={{position: "absolute", width: "20em", height: "20em", zIndex: -1, mt: "120px", left: "5%", display: {xs: "none", lg: "block"}}}></BookIcon>
     </div>
   )
 }
