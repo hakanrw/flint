@@ -8,10 +8,11 @@ import WIP from "../../Components/WIP";
 import Feed from "../Feed";
 import Profile from "../Profile";
 import Welcome from "../Welcome";
+import People from "../People";
 
 const routes = [
   ["/", "Feed", <Feed />],
-  ["/people", "People", <WIP />],
+  ["/people", "People", <People />],
   ["/messages", "Messages", <WIP />],
   ["/profile", "My Profile", <Profile />],
 ];
@@ -42,7 +43,7 @@ function Home() {
           </Paper>
           <Routes>
             {
-              routes.map(route => <Route key={route[0]} path={route[0]} element={route[2]} /> )
+              routes.map(route => <Route key={route[0]} path={route[0] + "/*"} element={route[2]} /> )
             }
           </Routes>
         </Grid>
