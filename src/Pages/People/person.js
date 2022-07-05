@@ -9,6 +9,7 @@ function PersonProfile(props) {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [followed, setFollowed] = useState(false);
   const [posts, setPosts] = useState(null);
   const { username } = useParams();
 
@@ -16,6 +17,8 @@ function PersonProfile(props) {
     console.log("fetch")
     setError(null);
     setLoading(true);
+    setFollowed(false);
+
     const fetchUserAndPosts = async () => {
       const response = await supabase.from("profiles").select("*").filter('username', 'eq', username);
       if (response.data.length === 0) {
@@ -25,10 +28,15 @@ function PersonProfile(props) {
       const data = response.data[0];
       setUser(data);
       supabase.from("posts").select("*").filter('author', 'eq', data.id).order('created_at', {ascending: false})
-      .then(data => {
-        setLoading(false);
-        setPosts(data.data);
-      });
+        .then(data => {
+          setLoading(false);
+          setPosts(data.data);
+        });
+      supabase.from("follows").select("*").filter('follower', 'eq', supabase.auth.user().id).filter('followee', 'eq', data.id)
+        .then(data => {
+          if (data.data.length === 0) setFollowed(false)
+          else setFollowed(true);
+        });
     }
     fetchUserAndPosts();
   }, [username]);
@@ -51,7 +59,7 @@ function PersonProfile(props) {
 
   return (
     <div>
-      <Person {...user} onPage />
+      <Person {...user} onPage followed={followed} />
       {
         posts && posts.map(post => <Post key={post.id} {...post} username={user.username} avatar_url={user.avatar_url} onDelete={fetchProfile} />)
       }

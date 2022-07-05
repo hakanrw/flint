@@ -2,12 +2,39 @@ import { Avatar, Button, Card, CardHeader, Skeleton } from "@mui/material";
 
 import { red } from '@mui/material/colors';
 import { Box } from "@mui/system";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../supabaseClient";
 
-function Person({ username, id, avatar_url, loading = false, onPage = false }) {
+function Person({ username, id, avatar_url, loading = false, onPage = false, followed = false }) {
   const screenName = username || id || "unbeknownst";
 
   const navigate = useNavigate();
+
+  const [isFollowed, setIsFollowed] = useState(followed);
+  
+  useEffect(() => {
+    setIsFollowed(followed);
+  }, [followed]);
+  
+  const handleFollow = useCallback(() => {
+    setIsFollowed(-1);
+    supabase.from("follows").insert({follower: supabase.auth.user().id, followee: id})
+      .then(res => {
+        console.log(res);
+        if (res.error) return;
+        setIsFollowed(true);
+      })
+  }, [id]);
+
+  const handleUnfollow = useCallback(() => {
+    setIsFollowed(-1);
+    supabase.from("follows").delete().match({follower: supabase.auth.user().id, followee: id})
+      .then(res => {
+        if (res.error) return;
+        setIsFollowed(false);
+      })
+  }, [id]);
 
   return (
     <Card sx={{my: 2}}>
@@ -23,7 +50,8 @@ function Person({ username, id, avatar_url, loading = false, onPage = false }) {
           loading ?
           null :
           <Box>
-            <Button>Follow</Button>
+            { onPage && isFollowed === true && <Button onClick={handleUnfollow}>Unfollow</Button> }
+            { onPage && isFollowed === false && <Button onClick={handleFollow}>Follow</Button> }
             { !onPage && <Button onClick={() => navigate(username)}>Profile</Button> }
           </Box>
         }
