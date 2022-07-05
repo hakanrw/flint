@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Announcement from "../../Components/Announcement";
 import Person from "../../Components/Person";
@@ -12,7 +12,8 @@ function PersonProfile(props) {
   const [posts, setPosts] = useState(null);
   const { username } = useParams();
 
-  useEffect(() => {
+  const fetchProfile = useCallback(() => {
+    console.log("fetch")
     setError(null);
     setLoading(true);
     const fetchUserAndPosts = async () => {
@@ -23,7 +24,7 @@ function PersonProfile(props) {
       }
       const data = response.data[0];
       setUser(data);
-      supabase.from("posts").select("*").filter('author', 'eq', data.id)
+      supabase.from("posts").select("*").filter('author', 'eq', data.id).order('created_at', {ascending: false})
       .then(data => {
         setLoading(false);
         setPosts(data.data);
@@ -31,6 +32,10 @@ function PersonProfile(props) {
     }
     fetchUserAndPosts();
   }, [username]);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [username, fetchProfile]);
 
   if (error) return (
     <Announcement message={error} />
@@ -48,7 +53,7 @@ function PersonProfile(props) {
     <div>
       <Person {...user} onPage />
       {
-        posts && posts.map(post => <Post key={post.id} {...post} username={user.username} avatar_url={user.avatar_url} />)
+        posts && posts.map(post => <Post key={post.id} {...post} username={user.username} avatar_url={user.avatar_url} onDelete={fetchProfile} />)
       }
     </div>
   );

@@ -1,4 +1,4 @@
-import { Box, Button, Paper, TextField } from "@mui/material";
+import { Alert, Box, Button, Paper, TextField } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Person from "../../Components/Person";
@@ -6,6 +6,7 @@ import { supabase } from "../../supabaseClient";
 
 function PeopleSearch() {
   const [users, setUsers] = useState(null);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   
   const location = useLocation();
@@ -16,8 +17,12 @@ function PeopleSearch() {
   const query = new URLSearchParams(location.search).get("q");
 
   useEffect(() => {
+    setError(null);
     if (!query) return;
-    console.log("searching");
+    if (query.length < 3) {
+      setError("Input at least 3 characters.")
+      return;
+    }
     setLoading(true);
     supabase.from("profiles").select("*").filter('username', 'like', `%${query}%`).limit(10)
       .then(data => {
@@ -41,6 +46,7 @@ function PeopleSearch() {
           <TextField size="small" label="Search for people" onKeyUp={onKeyPress} inputRef={searchRef} />
           <Button onClick={onSearch} sx={{ml: 1}}>Search</Button>
         </Box>
+        { error && <Alert sx={{mt: 2}} severity="error">{error}</Alert>}
       </Paper>
       {
         loading && 
