@@ -3,7 +3,7 @@ import { Avatar, Button, Card, CardHeader, Skeleton } from "@mui/material";
 import { red } from '@mui/material/colors';
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 
 function Person({ username, id, avatar_url, loading = false, onPage = false, followed = false }) {
@@ -42,9 +42,11 @@ function Person({ username, id, avatar_url, loading = false, onPage = false, fol
         avatar={
           loading ?
           <Skeleton variant="circular" width={40} height={40} /> :
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            {screenName[0]}
-          </Avatar>
+          <Link to={"/people/" + username} style={{ textDecoration: 'none', color: "inherit" }}>
+            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+              {screenName[0]}
+            </Avatar>
+          </Link>
         }
         action={
           loading ?
@@ -52,13 +54,13 @@ function Person({ username, id, avatar_url, loading = false, onPage = false, fol
           <Box>
             { onPage && isFollowed === true && <Button onClick={handleUnfollow}>Unfollow</Button> }
             { onPage && isFollowed === false && <Button onClick={handleFollow}>Follow</Button> }
-            { !onPage && <Button onClick={() => navigate(username)}>Profile</Button> }
+            { !onPage && <Button onClick={() => navigate("/people/" + username)}>Profile</Button> }
           </Box>
-        }
+        } 
         title={
           loading ? 
           <Skeleton height={10} width="80%" style={{ marginBottom: 6 }} /> :
-          screenName 
+          <Link to={"/people/" + username} style={{ textDecoration: 'none', color: "inherit" }}>{screenName}</Link> 
         }
       />
     </Card>

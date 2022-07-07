@@ -3,14 +3,15 @@ import { Avatar, Card, CardActions, CardContent, CardHeader, IconButton, ListIte
 
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
+import CommentIcon from '@mui/icons-material/Comment';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-import React, { Fragment, useCallback, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import moment from 'moment';
 import { supabase } from '../supabaseClient';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -24,11 +25,12 @@ const ExpandMore = styled((props) => {
 }));
 
 function Post(props) {
-  const { noImage = false, author, content, created_at, username, onDelete, id } = props;
+  const { noImage = false, author, content, created_at, username, onDelete, id, comment } = props;
   
   const screenName = username || author || "unbeknownst";
   const isThisUser = author === supabase.auth.user().id;
   
+  const navigate = useNavigate();
   const [anchorElOptions, setAnchorElOptions] = useState(null);
   const [loading, setLoading] = useState(props.loading || false);
 
@@ -40,10 +42,16 @@ function Post(props) {
     setAnchorElOptions(null);
   }, []);
 
+  useEffect(() => setLoading(props.loading), [props.loading])
+
+  const goToPostView = useCallback(() => {
+    navigate(`/people/${username}/${id}`);
+  }, [navigate, username, id]);
+
   const handleDelete = () => {
     handleCloseOptionsMenu();
     setLoading(true);
-    supabase.from("posts").delete().match({id}).then(() => {
+    supabase.from(comment ? "comments" : "posts").delete().match({id}).then(() => {
       onDelete();
     })
   }
@@ -54,9 +62,11 @@ function Post(props) {
         avatar={
           loading ?
           <Skeleton variant="circular" width={40} height={40} /> :
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            {screenName[0]}
-          </Avatar>
+          <Link to={"/people/" + username} style={{ textDecoration: 'none' }}>
+            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+              {screenName[0]}
+            </Avatar>
+          </Link>
         }
         action={
           loading || !isThisUser ?
@@ -93,7 +103,7 @@ function Post(props) {
         title={
           loading ? 
           <Skeleton height={10} width="80%" style={{ marginBottom: 6 }} /> :
-          screenName 
+          <Link to={"/people/" + username} style={{ textDecoration: 'none', color: "inherit" }}>{screenName}</Link> 
         }
         subheader={
           loading ?
@@ -119,13 +129,13 @@ function Post(props) {
           }
         </CardContent>
         {
-          !loading && 
+          !loading && !comment &&
           <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
             <FavoriteIcon />
           </IconButton>
-          <IconButton aria-label="share">
-            <ShareIcon />
+          <IconButton aria-label="comment" onClick={goToPostView}>
+            <CommentIcon />
           </IconButton>
           <ExpandMore
             expand={false}
