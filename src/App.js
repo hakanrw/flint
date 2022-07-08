@@ -26,17 +26,13 @@ function App() {
     .map((param) => param.split("="));
 
     let type;
-    let accessToken;
     for (const [key, value] of hashArr) {
       if (key === "type") {
         type = value;
-      } else if (key === "access_token") {
-        accessToken = value;
-      }
+      } 
     }
 
-    if (type === "recovery") navigate("/password-reset");
-    console.log(hashArr); 
+    if (type === "recovery") navigate("/reset-password");
   }, [navigate]);
 
   useEffect(() => {
