@@ -91,6 +91,7 @@ function Login() {
       <Link {...style} display="block" onClick={() => {setIsRegister(!isRegister)}} href="#" underline="hover">
         { isRegister ? "Already registered? Sign In." : "No account? Register."}
       </Link>
+      { !isRegister && <Link {...style} display="block" href="#" onClick={() => navigate("/forgot-password")} underline="hover">Forgot Password?</Link> } 
       { message && <Alert {...style} severity={message[0]}>{message[1]}</Alert>}
       { !isRegister && <Button {...style} aria-label="log in" variant="contained" onClick={logIn}>Log In</Button> }
       { isRegister && <Button {...style} aria-label="register" variant="contained" onClick={register}>Register</Button> }
