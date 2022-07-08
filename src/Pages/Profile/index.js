@@ -3,6 +3,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { Box } from "@mui/system";
 import { memo, useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
   const [profile, setProfile] = useState(null);
@@ -10,6 +11,7 @@ function Profile() {
   const [error, setError] = useState(null);
   const [filename, setFilename] = useState(null);
   const [cleared, setCleared] = useState(false);
+  const navigate = useNavigate();
 
   const fetchProfile = () => supabase.rpc("get_current_profile").then(user => user.data[0])
     .then(data => setProfile({...data, email: supabase.auth.user().email})); 
@@ -94,7 +96,7 @@ function Profile() {
       <TextField {...style} label="E-mail" variant="outlined" value={profile.email} disabled />
       { error && <Alert sx={{my: 2}} severity="error">{error}</Alert>}
       <Box sx={{maxWidth: "150px"}}>
-        <Button fullWidth {...style} variant="outlined">My Profile</Button>
+        <Button onClick={() => navigate("/people/" + profile.username)} fullWidth {...style} variant="outlined">My Profile</Button>
         <Button onClick={updateProfile} fullWidth {...style} variant="contained">Save Changes</Button>
       </Box>
     </Paper>

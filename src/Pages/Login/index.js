@@ -1,16 +1,16 @@
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Button from "@mui/material/Button";
 import { useCallback, useState } from 'react';
 import { supabase } from '../../supabaseClient';
 import { useRef } from 'react';
-import { Alert, Link } from '@mui/material';
+import Alert from "@mui/material/Alert"
+import Link from "@mui/material/Link"
 import { useNavigate } from 'react-router-dom';
+import Form from '../../Components/Form';
 
 function Login() {
-  let style = {sx: {mt: 2}};
+  const style = {sx: {mt: 2}};
   
   const usernameRef = useRef(null);
   const mailRef = useRef(null);
@@ -82,21 +82,19 @@ function Login() {
   const isError = Boolean(message && message[0] === "error");
   
   return (
-    <Container maxWidth="sm" sx={{py: 4}}>
-      <Paper sx={{p: 4, textAlign:"center", fontWeight: 600}}> 
-        <Typography color="primary" variant="h3">Log In</Typography>
-        <TextField error={isError} {...style} fullWidth variant="outlined" label="E-mail" inputRef={mailRef} onKeyUp={handleEnter} />
-        { isRegister && <TextField error={isError} {...style} fullWidth variant="outlined" label="Username" inputRef={usernameRef} onKeyUp={handleEnter} /> }
-        <TextField error={isError} {...style} fullWidth variant="outlined" label="Password" type="password" inputRef={passwordRef} onKeyUp={handleEnter} />
-        { isRegister && <TextField error={isError} {...style} fullWidth variant="outlined" label="Password Check" type="password" inputRef={rePasswordRef} onKeyUp={handleEnter} /> }
-        <Link {...style} display="block" onClick={() => {setIsRegister(!isRegister)}} href="#" underline="hover">
-          { isRegister ? "Already registered? Sign In." : "No account? Register."}
-        </Link>
-        { message && <Alert {...style} severity={message[0]}>{message[1]}</Alert>}
-        { !isRegister && <Button {...style} aria-label="log in" variant="contained" onClick={logIn}>Log In</Button> }
-        { isRegister && <Button {...style} aria-label="register" variant="contained" onClick={register}>Register</Button> }
-      </Paper>
-    </Container>
+    <Form>
+      <Typography color="primary" variant="h3">Log In</Typography>
+      <TextField error={isError} {...style} fullWidth variant="outlined" label="E-mail" inputRef={mailRef} onKeyUp={handleEnter} />
+      { isRegister && <TextField error={isError} {...style} fullWidth variant="outlined" label="Username" inputRef={usernameRef} onKeyUp={handleEnter} /> }
+      <TextField error={isError} {...style} fullWidth variant="outlined" label="Password" type="password" inputRef={passwordRef} onKeyUp={handleEnter} />
+      { isRegister && <TextField error={isError} {...style} fullWidth variant="outlined" label="Password Check" type="password" inputRef={rePasswordRef} onKeyUp={handleEnter} /> }
+      <Link {...style} display="block" onClick={() => {setIsRegister(!isRegister)}} href="#" underline="hover">
+        { isRegister ? "Already registered? Sign In." : "No account? Register."}
+      </Link>
+      { message && <Alert {...style} severity={message[0]}>{message[1]}</Alert>}
+      { !isRegister && <Button {...style} aria-label="log in" variant="contained" onClick={logIn}>Log In</Button> }
+      { isRegister && <Button {...style} aria-label="register" variant="contained" onClick={register}>Register</Button> }
+    </Form>
   );
 }
 
