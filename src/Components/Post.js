@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Avatar, Card, CardActions, CardContent, CardHeader, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Skeleton, Typography } from "@mui/material";
+import { Card, CardActions, CardContent, CardHeader, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Skeleton, Typography } from "@mui/material";
 
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -12,6 +12,7 @@ import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import moment from 'moment';
 import { supabase } from '../supabaseClient';
 import { Link, useNavigate } from 'react-router-dom';
+import AvatarLink from './Avatar';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -25,7 +26,7 @@ const ExpandMore = styled((props) => {
 }));
 
 function Post(props) {
-  const { noImage = false, author, content, created_at, username, onDelete, id, comment } = props;
+  const { noImage = false, author, content, created_at, username, onDelete, id, comment, avatar_url } = props;
   
   const screenName = username || author || "unbeknownst";
   const isThisUser = author === supabase.auth.user().id;
@@ -62,11 +63,7 @@ function Post(props) {
         avatar={
           loading ?
           <Skeleton variant="circular" width={40} height={40} /> :
-          <Link to={"/people/" + username} style={{ textDecoration: 'none' }}>
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-              {screenName[0]}
-            </Avatar>
-          </Link>
+          <AvatarLink username={username} avatar_url={avatar_url} />
         }
         action={
           loading || !isThisUser ?

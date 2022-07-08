@@ -1,10 +1,10 @@
-import { Avatar, Button, Card, CardHeader, Skeleton } from "@mui/material";
+import { Button, Card, CardHeader, Skeleton } from "@mui/material";
 
-import { red } from '@mui/material/colors';
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
+import AvatarLink from "./Avatar";
 
 function Person({ username, id, avatar_url, loading = false, onPage = false, followed = false }) {
   const screenName = username || id || "unbeknownst";
@@ -42,11 +42,7 @@ function Person({ username, id, avatar_url, loading = false, onPage = false, fol
         avatar={
           loading ?
           <Skeleton variant="circular" width={40} height={40} /> :
-          <Link to={"/people/" + username} style={{ textDecoration: 'none', color: "inherit" }}>
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-              {screenName[0]}
-            </Avatar>
-          </Link>
+          <AvatarLink username={username} avatar_url={avatar_url} />
         }
         action={
           loading ?

@@ -16,7 +16,7 @@ function PostView() {
   const fetchPostAndComments = useCallback(async () => {
     setError(null);
     const post = await supabase.from("posts").select("*").filter("id", "eq", postid);
-    if (post.error) {
+    if (post.error || post.data.length === 0) {
       setError("No such post.");
       return;
     }
@@ -26,7 +26,6 @@ function PostView() {
         supabase.rpc("get_comments", { post: post.data[0].id })
       ]
     );
-    console.log(data);
     setLoad(false);
     setPostData({profile: data[0].data[0], comments: data[1].data, post: post.data[0]});
   }, [postid]);
