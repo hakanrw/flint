@@ -13,7 +13,7 @@ function Feed() {
   const fetchPosts = useCallback(() => {
     if (_dev_loading) return;
     _dev_loading = true;
-    supabase.rpc("get_posts_v2").then(data => {
+    supabase.rpc("get_posts_v3").then(data => {
       _dev_loading = false;
       setPosts(data.data); 
       setLoad(false);

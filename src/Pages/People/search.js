@@ -24,7 +24,7 @@ function PeopleSearch() {
       return;
     }
     setLoading(true);
-    supabase.from("profiles").select("*").filter('username', 'like', `%${query}%`).limit(10)
+    supabase.from("profiles").select("*").ilike('username', `%${query}%`).limit(10)
       .then(data => {
         setLoading(false);
         setUsers(data.data);

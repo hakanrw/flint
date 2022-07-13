@@ -15,9 +15,6 @@ function PersonProfile(props) {
 
   const fetchProfile = useCallback(() => {
     console.log("fetch")
-    setError(null);
-    setLoading(true);
-    setFollowed(false);
 
     const fetchUserAndPosts = async () => {
       const response = await supabase.from("profiles").select("*").filter('username', 'eq', username);
@@ -27,7 +24,7 @@ function PersonProfile(props) {
       }
       const data = response.data[0];
       setUser(data);
-      supabase.from("posts").select("*").filter('author', 'eq', data.id).order('created_at', {ascending: false})
+      supabase.rpc("get_user_posts", { profilename: username })
         .then(data => {
           setLoading(false);
           setPosts(data.data);
@@ -42,6 +39,9 @@ function PersonProfile(props) {
   }, [username]);
 
   useEffect(() => {
+    setError(null);
+    setLoading(true);
+    setFollowed(false);
     fetchProfile();
   }, [username, fetchProfile]);
 
@@ -61,7 +61,7 @@ function PersonProfile(props) {
     <div>
       <Person {...user} onPage followed={followed} />
       {
-        posts && posts.map(post => <Post key={post.id} {...post} username={user.username} avatar_url={user.avatar_url} onDelete={fetchProfile} />)
+        posts && posts.map(post => <Post key={post.id} {...post} onDelete={fetchProfile} />)
       }
     </div>
   );

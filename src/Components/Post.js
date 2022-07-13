@@ -26,7 +26,7 @@ const ExpandMore = styled((props) => {
 }));
 
 function Post(props) {
-  const { noImage = false, author, content, created_at, username, onDelete, id, comment, avatar_url } = props;
+  const { noImage = false, author, content, created_at, username, onDelete, id, comment, avatar_url, comment_count } = props;
   
   const screenName = username || author || "unbeknownst";
   const isThisUser = author === supabase.auth.user().id;
@@ -134,6 +134,7 @@ function Post(props) {
           <IconButton aria-label="comment" onClick={goToPostView}>
             <CommentIcon />
           </IconButton>
+          {comment_count ? comment_count : null}
           <ExpandMore
             expand={false}
             aria-expanded={false}
