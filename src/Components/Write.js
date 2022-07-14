@@ -17,6 +17,7 @@ function Write({ onPost, comment, postId }) {
       console.log(res);
       onPost(true);
       if (res.error) {
+        console.log(res.error);
         setValue(_postval);
         return;
       }

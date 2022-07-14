@@ -4,16 +4,16 @@ import { Button, Container, Grid, Paper, Typography } from "@mui/material";
 import { useContext } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AppContext from "../../appContext";
-import WIP from "../../Components/WIP";
 import Feed from "../Feed";
 import Profile from "../Profile";
 import Welcome from "../Welcome";
 import People from "../People";
+import Notifications from "../Notifications";
 
 const routes = [
   ["/", "Feed", <Feed />],
   ["/people", "People", <People />],
-  ["/messages", "Messages", <WIP />],
+  ["/notifs", "Notifications", <Notifications />],
   ["/profile", "My Profile", <Profile />],
 ];
 

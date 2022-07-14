@@ -39,6 +39,7 @@ function Person({ username, id, avatar_url, loading = false, onPage = false, fol
   return (
     <Card sx={{my: 2}}>
       <CardHeader
+        sx={{'& .MuiCardHeader-action': {alignSelf: "center"}}}
         avatar={
           loading ?
           <Skeleton variant="circular" width={40} height={40} /> :
