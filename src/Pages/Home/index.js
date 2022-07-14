@@ -1,7 +1,7 @@
 
 import { Button, Container, Grid, Paper, Typography } from "@mui/material";
 
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AppContext from "../../appContext";
 import Feed from "../Feed";
@@ -9,6 +9,7 @@ import Profile from "../Profile";
 import Welcome from "../Welcome";
 import People from "../People";
 import Notifications from "../Notifications";
+import { supabase } from "../../supabaseClient";
 
 const routes = [
   ["/", "Feed", <Feed />],
@@ -23,9 +24,28 @@ function Home() {
   const navigate = useNavigate();
   const pathname = location.pathname + "/";
 
+  const [notifCount, setNotifCount] = useState(0);
+
+  const fetchNotifsCount = () => {
+    supabase.rpc("get_notifs_count").then(data => {
+      if (data.error) return;
+      setNotifCount(data.data); 
+    })
+  }
+
+  useEffect(() => {
+    fetchNotifsCount();
+    const interval = setInterval(() => fetchNotifsCount(), 8000);
+    
+    return function clearEffect() {
+      clearInterval(interval);
+    }
+  }, [])
+  
   if (!appContext.session) return (
     <Welcome />
   );
+
   return (
     <Container data-testid="home-container" sx={{mt: 5}}>
       <Grid container spacing={2}>
@@ -33,7 +53,7 @@ function Home() {
           <Paper sx={{p: 2, display: {xs: "flex", sm: "block", overflowX: "auto"},
            '& button': {display: {xs: "inline", sm: "block"}, width: {sm: "100%"}, textAlign: "left", flexShrink: 0}}}>
             {
-              routes.map(route => <Button key={route[0]} onClick={() => navigate(route[0])}>{route[1]}</Button> )
+              routes.map(route => <Button key={route[0]} onClick={() => navigate(route[0])}>{route[1]} {route[0] === "/notifs" && notifCount > 0 && `(${notifCount})`}</Button> )
             }
           </Paper>
         </Grid>
