@@ -1,5 +1,6 @@
 
-import { Button, Container, Grid, Paper, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material";
+import CopyrightIcon from '@mui/icons-material/Copyright';
 
 import { useContext, useEffect, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
@@ -70,8 +71,13 @@ function Home() {
         <Grid item sx={{display: {xs: "none", md: "block"}}} md={3} >
           <Paper sx={{p: 2}}>
             <Typography color="primary">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.            
+              Flint is a thought expression platform. Write whatever you have on mind.
             </Typography>
+            <Box sx={{display: "flex", alignItems: "center", gap: 1, marginTop: 5}}>
+              <a href="https://hakan.candar.dev">hakan.candar.dev</a> 
+              <CopyrightIcon fontSize="inherit" /> 
+              <div>2023</div>
+            </Box>
           </Paper>
         </Grid>
       </Grid>

@@ -26,8 +26,10 @@ const ExpandMore = styled((props) => {
 }));
 
 function Post(props) {
-  const { noImage = false, author, content, created_at, username, onDelete, id, comment, avatar_url, comment_count } = props;
+  const { noImage = false, author, content, created_at, username, onDelete, id, comment, avatar_url, comment_count, like_count, self_liked } = props;
   
+  const [hasLiked, setHasLiked] = useState(self_liked);
+
   const screenName = username || author || "unbeknownst";
   const isThisUser = author === supabase.auth.user().id;
   
@@ -56,6 +58,16 @@ function Post(props) {
       onDelete();
     })
   }
+
+  const likeOrDislikePost = useCallback (() => {
+    if (hasLiked) {
+      supabase.from("likes").delete().eq("likee", supabase.auth.user().id).eq("post", id).then(onDelete);
+      setHasLiked(false);
+    } else {
+      supabase.from("likes").insert({ post: id, likee: supabase.auth.user().id}).then(onDelete);
+      setHasLiked(true);
+    }
+  }, [hasLiked, onDelete, id]);
 
   return (
     <Card sx={{ marginLeft: "auto", marginRight: "auto", my: 2 }}>
@@ -128,9 +140,10 @@ function Post(props) {
         {
           !loading && !comment &&
           <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
+          <IconButton aria-label="add to favorites" onClick={likeOrDislikePost}>
+            <FavoriteIcon color={hasLiked ? "primary" : ""} />
           </IconButton>
+          {like_count ? like_count : null}
           <IconButton aria-label="comment" onClick={goToPostView}>
             <CommentIcon />
           </IconButton>
