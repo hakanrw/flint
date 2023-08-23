@@ -36,7 +36,7 @@ function Home() {
 
   useEffect(() => {
     fetchNotifsCount();
-    const interval = setInterval(() => fetchNotifsCount(), 8000);
+    const interval = setInterval(() => fetchNotifsCount(), 10000);
     
     return function clearEffect() {
       clearInterval(interval);
@@ -74,9 +74,9 @@ function Home() {
               Flint is a thought expression platform. Write whatever you have on mind.
             </Typography>
             <Box sx={{display: "flex", alignItems: "center", gap: 1, marginTop: 5}}>
-              <a href="https://hakan.candar.dev">hakan.candar.dev</a> 
-              <CopyrightIcon fontSize="inherit" /> 
-              <div>2023</div>
+              <Typography color="primary"><a href="https://hakan.candar.dev">hakan.candar.dev</a></Typography>
+              <CopyrightIcon fontSize="inherit" color="primary"/> 
+              <Typography color="primary">2023</Typography>
             </Box>
           </Paper>
         </Grid>
